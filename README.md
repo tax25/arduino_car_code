@@ -1,3 +1,5 @@
-# arduino_car_code
+# Arduino car project
 
-This is the code for an arduino project that I started, the project is still in development. 
+This is the code for an Arduino project that I started.
+The project is still in development, so the code will be modified over and over again over the next
+few days or months.
