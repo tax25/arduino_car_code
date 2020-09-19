@@ -1,4 +1,4 @@
-// 25 Agosto 2020 Inizio a lavorare a questo codice. 
+// 25 Agosto 2020 Inizio a lavorare a questo codice.
 // L'altro è un po' rotto, per questo ne faccio uno nuovo.
 
 // Steering Stuff//
