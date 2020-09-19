@@ -1,7 +1,7 @@
 // 25 Agosto 2020 Inizio a lavorare a questo codice. 
 // L'altro è un po' rotto, per questo ne faccio uno nuovo.
 
-// Steering Stuff// 
+// Steering Stuff//
 #include "Servo.h"
 Servo myServo;
 #define pinServo 4
@@ -39,7 +39,7 @@ void setup(){
 	Serial.begin(9600);
 
 	myServo.attach(pinServo);
-	
+
 	//Settaggio primo motore//
   	pinMode(pwmA, OUTPUT);
   	pinMode(in1A, OUTPUT);
@@ -52,7 +52,7 @@ void setup(){
   	//Settaggio sensori ad ultrasuoni
   	//Primo
   	pinMode(firstSensor_trigpin, OUTPUT);
-  	pinMode(firstSensor_echopin, INPUT);	
+  	pinMode(firstSensor_echopin, INPUT);
   	//Secondo
   	pinMode(secondSensor_trigpin, OUTPUT);
   	pinMode(secondSensor_echopin, INPUT);
@@ -62,7 +62,7 @@ void setup(){
 
 }
 
-#define val 0.03438 
+#define val 0.03438
 
 void loop(){
 
@@ -75,7 +75,7 @@ void loop(){
 void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1, int trigPin2, int echoPin2, int trigPin3, int echoPin3, int trigPin4, int echoPin4) /*-> None*/{
 	bool going_forward = true;
 
-	//Leggo i valori che arrivano dal joystick per ricavare velocità e sterzo. 
+	//Leggo i valori che arrivano dal joystick per ricavare velocità e sterzo.
 	int _speed = analogRead(pinY); //L'asse Y è l'asse della velocità
 	int _steering = analogRead(pinX); //L'asse X è l'asse dello sterzo
 
@@ -86,7 +86,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
     digitalWrite(trigPin1, LOW);
     float returnedTime1 = pulseIn(echoPin1, HIGH);
 	float distanza_davanti = val * returnedTime1 / 2;
-	
+
 	delayMicroseconds(10);
 //Secondo sensore (dietro)
     digitalWrite(trigPin2, HIGH);
@@ -115,26 +115,26 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 
 	int effective_speed = map(_speed, 0, 1023, 100, -100); // Cambio i loro valori da 0 a 1023 -> 100 a -100.
 														  // Abbiamo scelto 100 e -100 per avere la velocità massima di 100
-														  // sia in forward che in backward, ma non avere una velocità di 
-														  // di punta degna di un 747. 
-	int effective_steering = map(_steering, 0, 1023, 45, 135); //Invece per il servo abbiamo deciso di mettere come valore 
-														   // minimo 45 gradi, che è il massimo sterzo a sinistra, e 
-														   // 135 gradi sono il massimo sterzo a destra, esattamente 90 gradi 
-														   // di sterzo. Nella posizione "di riposo" siamo a 90 gradi. 
+														  // sia in forward che in backward, ma non avere una velocità di
+														  // di punta degna di un 747.
+	int effective_steering = map(_steering, 0, 1023, 45, 135); //Invece per il servo abbiamo deciso di mettere come valore
+														   // minimo 45 gradi, che è il massimo sterzo a sinistra, e
+														   // 135 gradi sono il massimo sterzo a destra, esattamente 90 gradi
+														   // di sterzo. Nella posizione "di riposo" siamo a 90 gradi.
 
 	/*
 		Certe volte potrebbe servire mettere un numero in più nella funzione
-		map() per avere l'esatto valore massimo che vogliamo. 
-		Infatti potrebbe accadere che mettiate come conversione da 0 a 100 per 
+		map() per avere l'esatto valore massimo che vogliamo.
+		Infatti potrebbe accadere che mettiate come conversione da 0 a 100 per
 		esempio, e il massimo numero che ricevete sia 99. Non so da cosa venga
 		causata la faccienda, ma quando mi è acccaduto ho risolto in questo modo.
 	*/
 
-	
+
 	//Serial.println("Steering: " + String(effective_steering));
 	//Serial.println(effective_speed);
 	if (effective_speed < 0){
-		
+
 		going_forward = false;
 		digitalWrite(in1A, LOW);
 		digitalWrite(in2A, HIGH);
@@ -142,8 +142,8 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		digitalWrite(in2B, HIGH);
 
 		effective_speed *= -1;
-		// Moltiplico per -1 la velocità che arriva nel caso sia negativa, 
-		// perché al driver non piacciono i numeri negativi e spara il 
+		// Moltiplico per -1 la velocità che arriva nel caso sia negativa,
+		// perché al driver non piacciono i numeri negativi e spara il
 		// motore a velocità massima (250).
 	}else{
 		//Serial.println("\nBuonasera adesso il valore di going_forward e' uguale a 1!");
@@ -155,16 +155,16 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 	}
 
 	//Serial.println("Speed: " + String(effective_speed) + " Questo è il valore di going_forward: " + String(going_forward));
-	//Serial.println(effective_steering);  
+	//Serial.println(effective_steering);
 	/*
 		IMPORTANTE:
 		Se effective_steering è maggiore di 90 allora la macchina sta girando a destra, altrimenti a sinistra.
 	*/
 	if ((distanza_davanti >= 15.0)&&(going_forward==1)){
-		
+
 		//Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO AVANTI MADERFADERS!!!!");
 		//Serial.println("Valore Sterzo: " + String(effective_steering) + "Questa è la distanza destra: " + String(distanza_destra));
-		
+
 		myServo.write(effective_steering);
 
 		if (effective_steering == 90){
@@ -191,13 +191,13 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		}else{
 			analogWrite(pin1, 0);
 			analogWrite(pin2, 0);
-		}	
+		}
 
-	
+
 	}else if((distanza_dietro >= 15.0)&&(going_forward==0)){
 
 		//Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO INDIETRO MADERFADERS!!!!");
-		
+
 		myServo.write(effective_steering);
 
 		if ((effective_steering > 90)&&(distanza_destra >= 15.0)){
@@ -214,7 +214,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		if ((effective_steering < 90)&&(distanza_sinistra >= 15.0)){
 
 			Serial.println("Sto facendo retro verso sinistra");
-			
+
 			//Serial.println("sinistra occupata" + String(distanza_sinistra));
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
@@ -228,5 +228,5 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		analogWrite(pin1, 0);
 		analogWrite(pin2, 0);
 	}
-	
+
 }
