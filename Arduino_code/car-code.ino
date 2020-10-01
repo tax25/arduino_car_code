@@ -82,36 +82,36 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 	int _steering = analogRead(pinX); // X axis is the steering axis
 
 	// Calculating the distances of the sensors
-//1st sensor (front)
+// 1st sensor (front)
 	digitalWrite(trigPin1, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin1, LOW);
   float returnedTime1 = pulseIn(echoPin1, HIGH);
-	float distanza_davanti = val * returnedTime1 / 2;
+	float distance_infront = val * returnedTime1 / 2;
 
 	delayMicroseconds(10);
-//2nd sensor (behind)
+// 2nd sensor (behind)
   digitalWrite(trigPin2, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin2, LOW);
   float returnedTime2 = pulseIn(echoPin2, HIGH);
-	float distanza_dietro = val * returnedTime2 / 2;
+	float distance_behind = val * returnedTime2 / 2;
 
 	delayMicroseconds(10);
-//3rd sensor (right)
+// 3rd sensor (right)
 	digitalWrite(trigPin3, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(trigPin3, LOW);
 	float returnedTime3 = pulseIn(echoPin3, HIGH);
-	float distanza_destra = val * returnedTime3 / 2;
+	float distance_right = val * returnedTime3 / 2;
 
 	delayMicroseconds(10);
-//4th sensor (left)
+// 4th sensor (left)
 	digitalWrite(trigPin4, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(trigPin4, LOW);
 	float returnedTime4 = pulseIn(echoPin4, HIGH);
-	float distanza_sinistra = val * returnedTime4 / 2;
+	float distance_left = val * returnedTime4 / 2;
 
 
 	// Taking the values returned by the joystick and "translating" them from
@@ -121,9 +121,9 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 
 	int effective_steering = map(_steering, 0, 1023, 45, 135);
 
-	//some debugging things
-	//Serial.println("Steering: " + String(effective_steering));
-	//Serial.println(effective_speed);
+	// some debugging things
+	// Serial.println("Steering: " + String(effective_steering));
+	// Serial.println(effective_speed);
 	if (effective_speed < 0){
 
 		going_forward = false;
@@ -140,7 +140,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 
 	}else{
 		// some debugging things
-		//Serial.println("\nBuonasera adesso il valore di going_forward e' uguale a 1!");
+		// Serial.println("\nBuonasera adesso il valore di going_forward e' uguale a 1!");
 		going_forward = true;
 		digitalWrite(in1A, HIGH);
 		digitalWrite(in2A, LOW);
@@ -148,18 +148,22 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		digitalWrite(in2B, LOW);
 	}
 
-	//Some debugging things
-	//Serial.println("Speed: " + String(effective_speed) + " Questo è il valore di going_forward: " + String(going_forward));
-	//Serial.println(effective_steering);
+	/*
+	Some debugging things
+	Serial.println("Speed: " + String(effective_speed) + " Questo è il valore di going_forward: " + String(going_forward));
+	Serial.println(effective_steering);
+	*/
+
 	/*
 		IMPORTANT:
 		If "effective_steering" is greater than 90 the car is steering right, otherwise it's steering left.
 	*/
-	if ((distanza_davanti >= 15.0)&&(going_forward==1)){
-		//Some debugging things
-		//Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO AVANTI MADERFADERS!!!!");
-		//Serial.println("Valore Sterzo: " + String(effective_steering) + "Questa è la distanza destra: " + String(distanza_destra));
-
+	if ((distance_infront >= 15.0)&&(going_forward==1)){
+		/*
+		Some debugging things
+		Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO AVANTI MADERFADERS!!!!");
+		Serial.println("Valore Sterzo: " + String(effective_steering) + "Questa è la distanza destra: " + String(distanza_destra));
+		*/
 		myServo.write(effective_steering);
 
 		if (effective_steering == 90){
@@ -168,7 +172,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
 		}
-		if ((effective_steering > 90)&&(distanza_destra >= 15.0)){
+		if ((effective_steering > 90)&&(distance_right >= 15.0)){
 			//Steering right
 			Serial.println("Sto girando a destra");
 			analogWrite(pin1, effective_speed);
@@ -178,7 +182,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 			analogWrite(pin2, 0);
 		}
 
-		if ((effective_steering < 90)&&(distanza_sinistra >= 15.0)){
+		if ((effective_steering < 90)&&(distance_left >= 15.0)){
 			//Steering left
 			/*Debugging things*/Serial.println("Sto girando a sinistra");
 			analogWrite(pin1, effective_speed);
@@ -189,13 +193,13 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 		}
 
 
-	}else if((distanza_dietro >= 15.0)&&(going_forward==0)){
+	}else if((distance_behind >= 15.0)&&(going_forward==0)){
 		//Some debugging things
 		//Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO INDIETRO MADERFADERS!!!!");
 
 		myServo.write(effective_steering);
 
-		if ((effective_steering > 90)&&(distanza_destra >= 15.0)){
+		if ((effective_steering > 90)&&(distance_right >= 15.0)){
 
 			/*Debugging things*/Serial.println("Sto facendo retro verso destra");
 
@@ -206,7 +210,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1
 			analogWrite(pin2, effective_speed);
 		}
 
-		if ((effective_steering < 90)&&(distanza_sinistra >= 15.0)){
+		if ((effective_steering < 90)&&(distance_left >= 15.0)){
 
 			/*Debugging things*/Serial.println("Sto facendo retro verso sinistra");
 			//Some debugging things

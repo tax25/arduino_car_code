@@ -29,6 +29,17 @@ We do the same thing for the steering too.
 maximum right steering.
 
 ATTENTION: sometimes to have the maximum value you want, after the "translation"
-you have to add a number in the map function. 
+you have to add a number in the map function.
 Eg: map(_speed, 0, 1023, 100, -100); could give you 99 and -99 as max values.
 to avoid this you can just write 101. map(_speed, 0, 1023, 101, -101);
+
+## Calculating the distances of the sensors
+As you can see in the initial part of the function "set_motor_speed_and_steering"
+the code that calculates the effective distance is repeated a time for every
+sensor. I chose to re-write the code 4 times and not make a function because,
+at least in my experience, the code would be too slow and the car wouldn't be
+as reactive as it is with the code written like this.
+
+The set_motor_speed_and_steering function has a lot of parameters, i think that
+in the future I'll optimize it with less parameters, because like this it is
+really hard to read and it's really easy to miss one parameter.
