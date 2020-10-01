@@ -43,8 +43,6 @@ void setup(){
 
 	myServo.attach(pinServo);
 
-	int sensorsTrigPinArray = {5, 7, 9, 11};
-	int sensorsEchoPinArray = {6, 8, 10, 12};
 
 	/*First motor setting*/
   	pinMode(pwmA, OUTPUT);
