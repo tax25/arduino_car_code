@@ -22,6 +22,7 @@ Servo myServo;
 #define  buttonPin 52
 
 // Ultra-sound sensor connections
+#define number_of_Sensors 4
 #define firstSensor_trigpin 5
 #define firstSensor_echopin 6
 /////////////////////////////
@@ -34,10 +35,16 @@ Servo myServo;
 #define fourthSensor_trigPin 11
 #define fourthSensor_echoPin 12
 
+int sensorsTrigPinArray = {firstSensor_trigpin, secondSensor_trigpin, thirdSensor_trigPin, fourthSensor_trigPin};
+int sensorsEchoPinArray = {firstSensor_echopin, secondSensor_echopin, thirdSensor_echoPin, fourthSensor_echoPin};
+
 void setup(){
 	Serial.begin(9600);
 
 	myServo.attach(pinServo);
+
+	int sensorsTrigPinArray = {5, 7, 9, 11};
+	int sensorsEchoPinArray = {6, 8, 10, 12};
 
 	/*First motor setting*/
   	pinMode(pwmA, OUTPUT);
@@ -68,50 +75,35 @@ void setup(){
 
 void loop(){
 
-	set_motor_speed_and_steering(pwmA, pwmB, firstSensor_trigpin, firstSensor_echopin, secondSensor_trigpin, secondSensor_echopin, thirdSensor_trigPin, thirdSensor_echoPin, fourthSensor_trigPin, fourthSensor_echoPin);
+	set_motor_speed_and_steering(pwmA, pwmB, sensorsTrigPinArray, sensorsEchoPinArray, number_of_Sensors);
 
 	delay(200);
 }
 
 
-void set_motor_speed_and_steering(int pin1, int pin2, int trigPin1, int echoPin1, int trigPin2, int echoPin2, int trigPin3, int echoPin3, int trigPin4, int echoPin4) /*-> None*/{
+void set_motor_speed_and_steering(int pin1, int pin2, int trigArray, int echoArray, int nOfSensors) /*-> None*/{
 	bool going_forward = true;
 
 	// Reading the values returned by the joystick to calculate speed and steering
 	int _speed = analogRead(pinY); // Y axis is the acceleration axis
 	int _steering = analogRead(pinX); // X axis is the steering axis
 
-	// Calculating the distances of the sensors
-// 1st sensor (front)
-	digitalWrite(trigPin1, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin1, LOW);
-  float returnedTime1 = pulseIn(echoPin1, HIGH);
-	float distance_infront = val * returnedTime1 / 2;
+	for (int i = 0; i < numberOfSensors; i++){
 
-	delayMicroseconds(10);
-// 2nd sensor (behind)
-  digitalWrite(trigPin2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin2, LOW);
-  float returnedTime2 = pulseIn(echoPin2, HIGH);
-	float distance_behind = val * returnedTime2 / 2;
+		digitalWrite(trigArray[i], HIGH);
+		delayMicroseconds(10);
+		digitalWrite(trigArray[i], LOW);
+		float returnedTime = pulseIn(echoArray[i], HIGH);
+		float distanceCalculated = val * returnedTime / 2;
+		distancesArray[i] = distanceCalculated;
+		delayMicroseconds(10);
 
-	delayMicroseconds(10);
-// 3rd sensor (right)
-	digitalWrite(trigPin3, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trigPin3, LOW);
-	float returnedTime3 = pulseIn(echoPin3, HIGH);
-	float distance_right = val * returnedTime3 / 2;
+	}
 
-	delayMicroseconds(10);
-// 4th sensor (left)
-	digitalWrite(trigPin4, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trigPin4, LOW);
-	float returnedTime4 = pulseIn(echoPin4, HIGH);
-	float distance_left = val * returnedTime4 / 2;
+	distance_infront = distancesArray[0];
+	distance_behind = distancesArray[1];
+	distance_right = distancesArray[2];
+	distance_left = distancesArray[3];
 
 
 	// Taking the values returned by the joystick and "translating" them from
