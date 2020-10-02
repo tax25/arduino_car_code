@@ -43,7 +43,6 @@ void setup(){
 
 	myServo.attach(pinServo);
 
-
 	/*First motor setting*/
   	pinMode(pwmA, OUTPUT);
   	pinMode(in1A, OUTPUT);

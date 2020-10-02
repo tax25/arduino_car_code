@@ -40,6 +40,9 @@ sensor. I chose to re-write the code 4 times and not make a function because,
 at least in my experience, the code would be too slow and the car wouldn't be
 as reactive as it is with the code written like this.
 
-The set_motor_speed_and_steering function has a lot of parameters, i think that
+The set_motor_speed_and_steering function has a lot of parameters, I think that
 in the future I'll optimize it with less parameters, because like this it is
 really hard to read and it's really easy to miss one parameter.
+
+I changed the function "set_motor_speed_and_steering" parameters from like 10 to
+just five, now it is way easier to read.
