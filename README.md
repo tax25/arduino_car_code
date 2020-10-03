@@ -41,7 +41,9 @@ at least in my experience, the code would be too slow and the car wouldn't be
 as reactive as it is with the code written like this.
 
 I changed the way i calculate the distances of the sensors, rather than writing
-4 times the code, i used a for loop.
+4 times the code, i used a for loop. The for loop, loops on 2 arrays, sensorsTrigPinArray
+and sensorsEchoPinArray. The first array contains the "Trig" pins of the sensors,
+the second one contains the "Echo" pins of the sensors. 
 
 The set_motor_speed_and_steering function has a lot of parameters, I think that
 in the future I'll optimize it with less parameters, because like this it is

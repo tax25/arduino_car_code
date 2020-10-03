@@ -1,5 +1,4 @@
 // 25 Agosto 2020, Starting to work to this code.
-
 // Steering Stuff//
 #include "Servo.h"
 Servo myServo;
@@ -24,19 +23,21 @@ Servo myServo;
 
 	// Ultra-sound sensor connections
 		#define number_of_Sensors 4
-//////////////////////////////
+		//////////////////////////////
 		#define firstSensor_trigPin 5
 		#define firstSensor_echoPin 6
-/////////////////////////////
+		/////////////////////////////
 		#define secondSensor_trigPin 7
 		#define secondSensor_echoPin 8
-/////////////////////////////
+	  /////////////////////////////
 		#define thirdSensor_trigPin 9
 		#define thirdSensor_echoPin 10
-/////////////////////////////
+		/////////////////////////////
 		#define fourthSensor_trigPin 11
 		#define fourthSensor_echoPin 12
 
+// For more infos about this 2 arrays, check out the
+// "Calculating distances of the sensors" section
 int sensorsTrigPinArray[4] = {firstSensor_trigPin, secondSensor_trigPin, thirdSensor_trigPin, fourthSensor_trigPin};
 int sensorsEchoPinArray[4] = {firstSensor_echoPin, secondSensor_echoPin, thirdSensor_echoPin, fourthSensor_echoPin};
 
@@ -46,26 +47,26 @@ void setup(){
 
 	myServo.attach(pinServo);
 
-	/*First motor setting*/
+	/* First motor setting */
   	pinMode(pwmA, OUTPUT);
   	pinMode(in1A, OUTPUT);
   	pinMode(in2A, OUTPUT);
-  /*Second motor setting*/
+  /* Second motor setting */
   	pinMode(pwmB, OUTPUT);
   	pinMode(in1B, OUTPUT);
   	pinMode(in2B, OUTPUT);
 
-  	//Ultra-sound sensors setting
-  	//First
+  	// Ultra-sound sensors setting
+  	// First
   	pinMode(firstSensor_trigPin, OUTPUT);
   	pinMode(firstSensor_echoPin, INPUT);
-  	//Second
+  	// Second
   	pinMode(secondSensor_trigPin, OUTPUT);
   	pinMode(secondSensor_echoPin, INPUT);
-  	//Third
+  	// Third
   	pinMode(thirdSensor_trigPin, OUTPUT);
   	pinMode(thirdSensor_echoPin, INPUT);
-		//Fourth
+		// Fourth
 		pinMode(fourthSensor_trigPin, OUTPUT);
 		pinMode(fourthSensor_echoPin, INPUT);
 }
@@ -79,7 +80,6 @@ void loop(){
 
 	delay(200);
 }
-
 
 void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoArray, int nOfSensors) /*-> None*/{
 	bool going_forward = true;
@@ -159,13 +159,13 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		myServo.write(effective_steering);
 
 		if (effective_steering == 90){
-			//Going forward
+			// Going forward
 			Serial.println("Sto andando avanti" + String(effective_speed));
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
 		}
 		if ((effective_steering > 90)&&(distance_right >= 15.0)){
-			//Steering right
+			// Steering right
 			Serial.println("Sto girando a destra");
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
@@ -175,8 +175,8 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		}
 
 		if ((effective_steering < 90)&&(distance_left >= 15.0)){
-			//Steering left
-			/*Debugging things*/Serial.println("Sto girando a sinistra");
+			// Steering left
+			/* Debugging things */Serial.println("Sto girando a sinistra");
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
 		}else{
@@ -186,14 +186,14 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 
 
 	}else if((distance_behind >= 15.0)&&(going_forward==0)){
-		//Some debugging things
-		//Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO INDIETRO MADERFADERS!!!!");
+		// Some debugging things
+		// Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO INDIETRO MADERFADERS!!!!");
 
 		myServo.write(effective_steering);
 
 		if ((effective_steering > 90)&&(distance_right >= 15.0)){
 
-			/*Debugging things*/Serial.println("Sto facendo retro verso destra");
+			/* Debugging things */Serial.println("Sto facendo retro verso destra");
 
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
@@ -204,9 +204,9 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 
 		if ((effective_steering < 90)&&(distance_left >= 15.0)){
 
-			/*Debugging things*/Serial.println("Sto facendo retro verso sinistra");
-			//Some debugging things
-			//Serial.println("sinistra occupata" + String(distanza_sinistra));
+			/* Debugging things */Serial.println("Sto facendo retro verso sinistra");
+			// Some debugging things
+			// Serial.println("sinistra occupata" + String(distanza_sinistra));
 			analogWrite(pin1, effective_speed);
 			analogWrite(pin2, effective_speed);
 		}else{
@@ -215,9 +215,9 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		}
 
 	}else {
-		/*Debugging things*/Serial.println("Zona occupata!");
+		/* Debugging things */Serial.println("Zona occupata!");
 		analogWrite(pin1, 0);
 		analogWrite(pin2, 0);
 	}
-	
+
 }
