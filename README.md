@@ -4,7 +4,7 @@ This is the code for an Arduino project that I started.
 The project is still in development, so the code will be modified over and over again over the next
 few days or months.
 
-## define val (row 66)
+## define val
 The value "val" is the sound speed at a temperature of 20° Celsius in centimeters per microsecond.
 We use it to calculate the distance between the sensor and an obstacle.
 To calculate the distance between the sensor and the obstacle we have to
@@ -39,6 +39,9 @@ the code that calculates the effective distance is repeated a time for every
 sensor. I chose to re-write the code 4 times and not make a function because,
 at least in my experience, the code would be too slow and the car wouldn't be
 as reactive as it is with the code written like this.
+
+I changed the way i calculate the distances of the sensors, rather than writing
+4 times the code, i used a for loop.
 
 The set_motor_speed_and_steering function has a lot of parameters, I think that
 in the future I'll optimize it with less parameters, because like this it is

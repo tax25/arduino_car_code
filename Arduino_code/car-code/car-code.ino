@@ -4,40 +4,43 @@
 #include "Servo.h"
 Servo myServo;
 #define pinServo 4
+
 // motor pins
 	// 1st motor
-	#define pwmA 2
-	#define in1A 22
-	#define in2A 23
+		#define pwmA 2
+		#define in1A 22
+		#define in2A 23
 
 	// 2nd motor
-	#define pwmB 3
-	#define in1B 24
-	#define in2B 25
+		#define pwmB 3
+		#define in1B 24
+		#define in2B 25
 
-// For "human" driving
-// i-o joystick:
-#define  pinX A0
-#define  pinY A1
-#define  buttonPin 52
+// For "human" remote driving
+	// i-o joystick:
+		#define  pinX A0
+		#define  pinY A1
+		#define  buttonPin 52
 
-// Ultra-sound sensor connections
-#define number_of_Sensors 4
-#define firstSensor_trigpin 5
-#define firstSensor_echopin 6
+	// Ultra-sound sensor connections
+		#define number_of_Sensors 4
+//////////////////////////////
+		#define firstSensor_trigPin 5
+		#define firstSensor_echoPin 6
 /////////////////////////////
-#define secondSensor_trigpin 7
-#define secondSensor_echopin 8
+		#define secondSensor_trigPin 7
+		#define secondSensor_echoPin 8
 /////////////////////////////
-#define thirdSensor_trigPin 9
-#define thirdSensor_echoPin 10
+		#define thirdSensor_trigPin 9
+		#define thirdSensor_echoPin 10
 /////////////////////////////
-#define fourthSensor_trigPin 11
-#define fourthSensor_echoPin 12
+		#define fourthSensor_trigPin 11
+		#define fourthSensor_echoPin 12
 
-int sensorsTrigPinArray = {firstSensor_trigpin, secondSensor_trigpin, thirdSensor_trigPin, fourthSensor_trigPin};
-int sensorsEchoPinArray = {firstSensor_echopin, secondSensor_echopin, thirdSensor_echoPin, fourthSensor_echoPin};
+int sensorsTrigPinArray[4] = {firstSensor_trigPin, secondSensor_trigPin, thirdSensor_trigPin, fourthSensor_trigPin};
+int sensorsEchoPinArray[4] = {firstSensor_echoPin, secondSensor_echoPin, thirdSensor_echoPin, fourthSensor_echoPin};
 
+float distancesArray[4]; // This array stores the distances variables
 void setup(){
 	Serial.begin(9600);
 
@@ -54,11 +57,11 @@ void setup(){
 
   	//Ultra-sound sensors setting
   	//First
-  	pinMode(firstSensor_trigpin, OUTPUT);
-  	pinMode(firstSensor_echopin, INPUT);
+  	pinMode(firstSensor_trigPin, OUTPUT);
+  	pinMode(firstSensor_echoPin, INPUT);
   	//Second
-  	pinMode(secondSensor_trigpin, OUTPUT);
-  	pinMode(secondSensor_echopin, INPUT);
+  	pinMode(secondSensor_trigPin, OUTPUT);
+  	pinMode(secondSensor_echoPin, INPUT);
   	//Third
   	pinMode(thirdSensor_trigPin, OUTPUT);
   	pinMode(thirdSensor_echoPin, INPUT);
@@ -68,7 +71,7 @@ void setup(){
 }
 
 #define val 0.03438 // To know what this constant is check out the README file
-										// in the "define val" zone.
+										// in the "define val" section.
 
 void loop(){
 
@@ -78,14 +81,14 @@ void loop(){
 }
 
 
-void set_motor_speed_and_steering(int pin1, int pin2, int trigArray, int echoArray, int nOfSensors) /*-> None*/{
+void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoArray, int nOfSensors) /*-> None*/{
 	bool going_forward = true;
 
 	// Reading the values returned by the joystick to calculate speed and steering
 	int _speed = analogRead(pinY); // Y axis is the acceleration axis
 	int _steering = analogRead(pinX); // X axis is the steering axis
 
-	for (int i = 0; i < numberOfSensors; i++){
+	for (int i = 0; i < nOfSensors; i++){
 
 		digitalWrite(trigArray[i], HIGH);
 		delayMicroseconds(10);
@@ -97,10 +100,10 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigArray, int echoArr
 
 	}
 
-	distance_infront = distancesArray[0];
-	distance_behind = distancesArray[1];
-	distance_right = distancesArray[2];
-	distance_left = distancesArray[3];
+	float distance_infront = distancesArray[0];
+	float distance_behind = distancesArray[1];
+	float distance_right = distancesArray[2];
+	float distance_left = distancesArray[3];
 
 
 	// Taking the values returned by the joystick and "translating" them from
@@ -216,5 +219,5 @@ void set_motor_speed_and_steering(int pin1, int pin2, int trigArray, int echoArr
 		analogWrite(pin1, 0);
 		analogWrite(pin2, 0);
 	}
-
+	
 }
