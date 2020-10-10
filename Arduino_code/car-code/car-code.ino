@@ -1,47 +1,15 @@
 // 25 Agosto 2020, Starting to work to this code.
 // Steering Stuff//
 #include "Servo.h"
+#include "all_defines.h"
 Servo myServo;
-#define pinServo 4
-
-// motor pins
-	// 1st motor
-		#define pwmA 2
-		#define in1A 22
-		#define in2A 23
-
-	// 2nd motor
-		#define pwmB 3
-		#define in1B 24
-		#define in2B 25
-
-// For "human" remote driving
-	// i-o joystick:
-		#define  pinX A0
-		#define  pinY A1
-		#define  buttonPin 52
-
-	// Ultra-sound sensor connections
-		#define number_of_Sensors 4
-		//////////////////////////////
-		#define firstSensor_trigPin 5
-		#define firstSensor_echoPin 6
-		/////////////////////////////
-		#define secondSensor_trigPin 7
-		#define secondSensor_echoPin 8
-	  /////////////////////////////
-		#define thirdSensor_trigPin 9
-		#define thirdSensor_echoPin 10
-		/////////////////////////////
-		#define fourthSensor_trigPin 11
-		#define fourthSensor_echoPin 12
 
 // For more infos about this 2 arrays, check out the
 // "Calculating distances of the sensors" section
 int sensorsTrigPinArray[4] = {firstSensor_trigPin, secondSensor_trigPin, thirdSensor_trigPin, fourthSensor_trigPin};
 int sensorsEchoPinArray[4] = {firstSensor_echoPin, secondSensor_echoPin, thirdSensor_echoPin, fourthSensor_echoPin};
-
 float distancesArray[4]; // This array stores the distances variables
+
 void setup(){
 	Serial.begin(9600);
 
@@ -71,7 +39,7 @@ void setup(){
 		pinMode(fourthSensor_echoPin, INPUT);
 }
 
-#define val 0.03438 // To know what this constant is check out the README file
+#define val 0.03438 // To know what this constant is, check out the README file
 										// in the "define val" section.
 
 void loop(){
@@ -89,7 +57,6 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 	int _steering = analogRead(pinX); // X axis is the steering axis
 
 	for (int i = 0; i < nOfSensors; i++){
-
 		digitalWrite(trigArray[i], HIGH);
 		delayMicroseconds(10);
 		digitalWrite(trigArray[i], LOW);
@@ -97,14 +64,12 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		float distanceCalculated = val * returnedTime / 2;
 		distancesArray[i] = distanceCalculated;
 		delayMicroseconds(10);
-
 	}
 
 	float distance_infront = distancesArray[0];
 	float distance_behind = distancesArray[1];
 	float distance_right = distancesArray[2];
 	float distance_left = distancesArray[3];
-
 
 	// Taking the values returned by the joystick and "translating" them from
 	// 0-1023 to (negative)100-100. Look at the README file for more infos,
@@ -150,7 +115,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		IMPORTANT:
 		If "effective_steering" is greater than 90 the car is steering right, otherwise it's steering left.
 	*/
-	if ((distance_infront >= 15.0)&&(going_forward==1)){
+	if ((distance_infront >= 15.0)&&(going_forward == true)){
 		/*
 		Some debugging things
 		Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO AVANTI MADERFADERS!!!!");
@@ -185,7 +150,7 @@ void set_motor_speed_and_steering(int pin1, int pin2, int *trigArray, int *echoA
 		}
 
 
-	}else if((distance_behind >= 15.0)&&(going_forward==0)){
+	}else if((distance_behind >= 15.0)&&(going_forward == false)){
 		// Some debugging things
 		// Serial.println("Valore going_forward: " + String(going_forward) + "STO ANDANDO INDIETRO MADERFADERS!!!!");
 
