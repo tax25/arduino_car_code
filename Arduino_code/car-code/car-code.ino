@@ -1,8 +1,9 @@
 // 25 Agosto 2020, Starting to work to this code.
 // Steering Stuff//
 #include "Servo.h"
-#include "all_defines.h"
-Servo myServo;
+#include "all_defines.h" //With this include i include the file that has all the defines in the secondSensor_echoPin
+
+Servo myServo; //Creating servo object
 
 // For more infos about this 2 arrays, check out the
 // "Calculating distances of the sensors" section
